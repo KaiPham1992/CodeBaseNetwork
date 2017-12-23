@@ -63,16 +63,16 @@ extension API {
             URLRequest.request(target: target)
                 .flatMap { self.session.rx.response(request: $0) }
                 .subscribe(onNext: { response, data in
-                    let statusCode = response.statusCode
                     let json = JSON(data)
+                    let jsonStatus = json[APIKeyParam.status.rawValue]
+                    let statusError = Mapper<StatusError>().map(JSONObject: jsonStatus.dictionaryObject)
+                    
                     //---
-                    if statusCode >= 200 || statusCode < 300 {
+                    if statusError!.statusCode* >= 200 || statusError!.statusCode* < 300 {
                         let jsonData = json[APIKeyParam.data.rawValue]
                         observer.onNext(jsonData)
                         observer.onCompleted()
                     } else {
-                        let jsonStatus = json[APIKeyParam.status.rawValue]
-                        let statusError = Mapper<StatusError>().map(JSONObject: jsonStatus.dictionaryObject)
                         observer.onError(ApiError.errorFromAPI(statusError: statusError))
                     }
                 }, onError: { error in

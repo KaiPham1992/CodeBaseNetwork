@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     }
     
     func getOne() {
-        APIProvider(target: TestAPI.getWordbookWith(id: "Wb2")).rxRequestObject(TestModel.self).subscribe(onNext: { (model) in
+        APIProvider(target: TestAPI.getWordbookWith(id: "Wb22")).rxRequestObject(TestModel.self).subscribe(onNext: { (model) in
             print(model?.nameWordBook)
         }, onError: { (error) in
             print(error.localizedDescription)
