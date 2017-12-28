@@ -5,6 +5,8 @@ target 'CodeBaseNetWork' do
   #networking
 	pod 'RxSwift'
 	pod 'RxCocoa'
+    pod 'Action'
+    
 	pod 'ObjectMapper'
     pod 'SwiftyJSON'
 

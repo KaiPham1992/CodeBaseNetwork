@@ -11,12 +11,12 @@ import  RxSwift
 
 class ViewController: UIViewController {
     let bag = DisposeBag()
+    @IBOutlet weak var cvTest: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getOne()
+        configureCollection()
     }
-
     
     func getList() {
         APIProvider(target: TestAPI.getAllWordbook()).rxRequestArray(TestModel.self).subscribe(onNext: { (testList) in
@@ -37,4 +37,54 @@ class ViewController: UIViewController {
     }
 
 }
+
+
+extension ViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func configureCollection() {
+        cvTest.registerCustomCell(TestCell.self, fromNib: true)
+        cvTest.registerCustomHeader(TestCell.self, fromNib: true)
+        cvTest.registerCustomFooter(TestCell.self, fromNib: true)
+        cvTest.delegate = self
+        cvTest.dataSource = self
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueCustomCell(TestCell.self, indexPath: indexPath)
+        cell.backgroundColor = .red
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 50, height: 50)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == UICollectionElementKindSectionHeader {
+            let header = collectionView.dequeueCustomHeader(TestCell.self, indexPath: indexPath)
+            header.backgroundColor = .yellow
+            
+            return header
+        } else {
+            let header = collectionView.dequeueCustomFooter(TestCell.self, indexPath: indexPath)
+            header.backgroundColor = .green
+            
+            return header
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 200)
+    }
+    
+}
+
 
